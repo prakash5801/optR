@@ -1,0 +1,19 @@
+\name{forwardsubsitution.optR}
+\alias{forwardsubsitution.optR}
+\title{Function to solve linear system using forward substitution}
+\usage{
+forwardsubsitution.optR(L, b)
+}
+\arguments{
+  \item{L}{: Lower triangular matrix}
+
+  \item{b}{: response}
+}
+\value{
+y : Estiamted value
+}
+\description{
+Function to solve linear system using backsubsitution using
+Upper Triangular Matrix (Ux=c)
+}
+

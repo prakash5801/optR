@@ -1,0 +1,16 @@
+\name{machinePrecision}
+\alias{machinePrecision}
+\title{Function to address machine precision error}
+\usage{
+machinePrecision(A)
+}
+\arguments{
+  \item{A}{: Input matrix}
+}
+\value{
+A : return matrix
+}
+\description{
+function to remove the machine precision error
+}
+

@@ -1,0 +1,24 @@
+\name{predict.optR}
+\alias{predict.optR}
+\title{Prediction function based on optR class}
+\usage{
+\method{predict}{optR}(object, newdata, na.action = na.omit, ...)
+}
+\arguments{
+  \item{object}{: optR class fitted object}
+
+  \item{newdata}{: data for prediction}
+
+  \item{na.action}{: action for missing values}
+
+  \item{...}{: S3 class}
+}
+\value{
+fitted.val : Predicted values
+
+terms : terms used for fitting
+}
+\description{
+Function for making predictions using OptR class
+}
+
