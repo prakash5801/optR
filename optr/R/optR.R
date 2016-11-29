@@ -2,7 +2,7 @@
 {
   vers <- library(help=optR)$info[[1]]
   vers <- vers[grep("Version:",vers)]
-  vers <- rev(strsplit(vers," ")[[1]])[1]
+  # vers <- rev(strsplit(vers," ")[[1]])[1]
   packageStartupMessage(paste("Loaded optR",vers))
 }
 
@@ -52,6 +52,7 @@ optR<-function(x, ...) UseMethod("optR")
 #' @param iter  : Number of Iterations
 #' @param tol   : Convergence tolerance 
 #' @param keep.data : If TRUE returns input data
+#' @param contrasts : Data frame contract values
 #' @param ...   : S3 Class
 #' @return U        : Decomposed matrix for Gauss-ELimination Ax=b is converted into Ux=c where U is upper triangular matrix for LU decomposition U contain the values for L & U decomposition LUx=b
 #' @return c        : transformed b & for LU transformation c is y from equation Ux=y
@@ -76,7 +77,7 @@ optR<-function(x, ...) UseMethod("optR")
 #' Z<-optR(y~var1+var2+var3+var4+var1*var2-1, data=data.frame(data), method="cgm")
 #' 
 optR.formula<-function(formula, data=list(), weights=NULL, method=c("gauss, LU, gaussseidel", "cgm", "choleski"), 
-                       iter=500, tol=1e-7, keep.data=TRUE, ...)
+                       iter=500, tol=1e-7, keep.data=TRUE, contrasts=NULL, ...)
 {
   # Parse the call
   cl <- match.call()
@@ -89,7 +90,7 @@ optR.formula<-function(formula, data=list(), weights=NULL, method=c("gauss, LU, 
   
   # Extract data
   mt <- attr(mf, "terms")
-  x <- model.matrix(mt, mf, contrasts)
+  x <- model.matrix(mt, mf, contrasts)  
   y<-model.response(mf, "numeric")
   w <- as.vector(model.weights(mf))
   if (!is.null(w) && !is.numeric(w)) 

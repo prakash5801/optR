@@ -6,6 +6,8 @@
 #' @param x   : Initial solutions
 #' @param iter  : Number of Iterations
 #' @param tol : Convergence tolerance 
+#' @param w   : Relaxation paramter used to compute weighted avg. of previous solution. w=1 represent no relaxation
+#' @param witr : Iteration after which relaxation parameter become active
 #' @return optimal  : Optimal solutions
 #' @return initial  : initial solution
 #' @return relaxationFactor : relaxation factor
@@ -13,30 +15,30 @@
 #' A<-matrix(c(4,-1,1, -1,4,-2,1,-2,4), nrow=3,ncol=3, byrow = TRUE)
 #' b<-matrix(c(12,-1, 5), nrow=3,ncol=1,byrow=TRUE)
 #' Z<-optR(A, b, method="gaussseidel", iter=500, tol=1e-7)
-gaussSeidel<-function(A, b, x=NULL, iter=500, tol=1e-7){
-  w<-1 # relaxation
-  k<-10
-  p<-1
-  nROW<-nrow(A)
+gaussSeidel<-function(A, b, x=NULL, iter=500, tol=1e-7, w=1, witr=NULL){
+  if(is.null(witr)) witr<-iter
+  witrp<-1 # Difference of iteration to update w set to 1
+  
   # Initial solution (random values)
+  nROW<-nrow(A)
   if(is.null(x)) x<-matrix(rep(0, each=nROW), nrow = nROW, byrow=T)
   xini<-x
   for(i in 1:iter){
     xold<-x
     for(k in 1:nROW){
-      x[k]<-(1/A[k,k])*(b[k]-sapply(k, FUN=nonDiagMultipication, A, x))
+       x[k]<-(w/A[k,k])*(b[k]-sapply(k, FUN=nonDiagMultipication, A, x))
     }
     dx<-sqrt(t(x-xold)%*%(x-xold))
     if(dx<=tol){
       return(list("optimal"=x, "initial"=xini, "relaxationFactor"=w, "itr.conv"=i))
     } else
     {
-      if(i==k){
+      if(i==witr){
         dx1<-dx
       } 
-      if(i==(k+p)){
+      if(i==(witr+witrp)){
         dx2<-dx
-        w<-2/(1+sqrt(1-((dx2/dx1)^(1/p))))
+        w<-2/(1+sqrt(1-((dx2/dx1)^(1/witrp))))
       }
     }
   }
@@ -53,7 +55,7 @@ gaussSeidel<-function(A, b, x=NULL, iter=500, tol=1e-7){
 #' @param beta  : Response
 #' @return asum: Non-diagnol contribution
 nonDiagMultipication<-function(i, A, beta){
-  a<-seq(1, nrow(A), by=1)
-  asum<-sum(A[a!=i, i]*beta[a!=i])
+  a<-seq(1, length(beta), by=1)
+  asum<-sum(A[i,a!=i]*beta[a!=i])
   return(asum)
 }

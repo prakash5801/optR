@@ -8,7 +8,7 @@
 #'@return fitted.val   : Predicted values
 #'@return terms       : terms used for fitting
 #'@export
-predict.optR<-function(object, newdata, na.action=na.omit, ...) {  
+predict.optR<-function(object, newdata, na.action=na.pass, ...) {  
   # Extract terms used into the model
   tt<-terms(object)
   if (!inherits(object, "optR")) 
